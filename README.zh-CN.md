@@ -6,7 +6,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-把 Claude Code 一次 session 的工作成果变成一个**本地实时交互网页**，随 session 进展原地刷新——无需 Team/Enterprise 套餐。
+把 Claude Code 一次 session 的工作成果变成一个**本地实时交互网页**，随 session 进展原地刷新。
+
+这是一个**独立的本地实现**，**不访问、不解锁、不修改、不代理** Anthropic 官方的 Artifacts 服务——只在你自己的电脑上，渲染你自己的 Claude Code session 产出的内容。
 
 ```
 你说："把这个分析做成 artifact 发布"   →   Claude 生成页面
@@ -118,6 +120,18 @@ Claude Code ──(MCP stdio)──> server.py ──┬── publish_artifact 
                                                 └── POST /publish   → 更新内容
 浏览器 ──> http://localhost:7891 ──(EventSource)──> 发布时自动刷新
 ```
+
+## 安全说明
+
+安装前请阅读：
+
+- **它会渲染任意 HTML/JS。** Artifact 是由你的 Claude Code session 产出的内容生成的页面，在 `http://localhost:7891` 渲染。打开它就会**在浏览器里执行这些 HTML/JavaScript**——等同于运行不受信的前端代码。**只发布你信任的内容。**
+- **仅本机可访问。** 服务绑定 `127.0.0.1`，局域网/同一 WiFi 的人**无法**访问。不要通过隧道把端口暴露到不可信网络。
+- **`file_path` 已限制。** `publish_artifact` 工具只读文档文件（`.html/.htm/.md/.markdown/.txt`），拒绝其他路径，防止 prompt 诱导读取 `~/.ssh/id_rsa`、`.env` 等敏感文件并外泄。
+- **本地状态私有。** 发布内容缓存在 `~/.claude/artifacts/`，文件权限 `0600`、目录 `0700`。
+- **无沙箱。** 与官方（CSP 隔离）不同，本工具没有内容沙箱——这是在个人账号上自建的代价。
+
+请用它处理你自己电脑上的工作，不要拿它渲染来源不可信的内容。
 
 ## 与官方的差异
 

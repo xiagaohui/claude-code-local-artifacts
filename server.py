@@ -29,6 +29,10 @@ STATE_FILE = ARTIFACTS_DIR / "state.json"          # 元数据（轻量）
 CONTENT_FILE = ARTIFACTS_DIR / "current_content.json"  # 全量内容（持久化，重启可恢复）
 MARKED_JS_PATH = Path(__file__).parent / "marked.min.js"
 ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
+try:
+    ARTIFACTS_DIR.chmod(0o700)  # 仅当前用户可访问，防多用户机器上被同机他人读取
+except OSError:
+    pass
 
 # 启动时内联读取本地 marked.js（无 CDN 依赖，内网/离线可用）
 try:
@@ -297,7 +301,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "text/event-stream")
             self.send_header("Cache-Control", "no-cache")
             self.send_header("Connection", "keep-alive")
-            self.send_header("Access-Control-Allow-Origin", "*")
+            # 同源即可，无需跨域开放（去掉 Access-Control-Allow-Origin: *）
             self.end_headers()
             q: queue.Queue = queue.Queue(maxsize=8)
             with _sse_lock:
@@ -351,11 +355,17 @@ def _publish(title: str, emoji: str, content: str, fmt: str, published_at: str):
             "published_at": now,
         })
         snap = dict(_state)
-    # 持久化：元数据 + 全量内容（重启后可恢复）
+    # 持久化：元数据 + 全量内容（重启后可恢复）。文件权限 0600，
+    # 防多用户机器上被同机其他用户读取已发布内容（可能含 file_path 读入的敏感文件）
     try:
         meta = {k: v for k, v in snap.items() if k != "content"}
         STATE_FILE.write_text(json.dumps(meta, ensure_ascii=False, indent=2))
         CONTENT_FILE.write_text(json.dumps(snap, ensure_ascii=False))
+        for f in (STATE_FILE, CONTENT_FILE):
+            try:
+                f.chmod(0o600)
+            except OSError:
+                pass
     except Exception:
         pass  # 持久化失败不影响主流程（内容已在内存）
     _notify_sse()
@@ -436,10 +446,17 @@ async def _run_mcp():
         content   = arguments.get("content", "")
         file_path = arguments.get("file_path", "")
 
-        # 从文件读取（含大小校验）
+        # 从文件读取（含大小校验 + 后缀白名单）
+        # 安全：仅允许文档类后缀，防 prompt 注入诱导读取 ~/.ssh/id_rsa、
+        # .env、/etc/passwd 等敏感文件（这些通常无 .html/.md 后缀）并外泄到网页
+        ALLOWED_SUFFIXES = (".html", ".htm", ".md", ".markdown", ".txt")
         if file_path and not content:
             try:
                 p = Path(file_path).expanduser().resolve()
+                if p.suffix.lower() not in ALLOWED_SUFFIXES:
+                    return [TextContent(type="text",
+                        text=f"❌ 只允许发布文档文件（{', '.join(ALLOWED_SUFFIXES)}），"
+                             f"拒绝读取 {p.suffix or '无后缀'} 文件。如需发布请用 content 参数。")]
                 size = p.stat().st_size
                 if size > MAX_SIZE:
                     return [TextContent(type="text",

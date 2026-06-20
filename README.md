@@ -6,7 +6,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-Turn Claude Code's work into a **live, interactive web page** at a local URL that updates in place as your session continues — without a Team/Enterprise plan.
+Turn Claude Code's work into a **live, interactive web page** at a local URL that updates in place as your session continues.
+
+This is an **independent local re-implementation** of an Artifacts-style workflow. It does **not** access, unlock, modify, or proxy Anthropic's official Artifacts service — it only renders content your own local Claude Code session produces, on your own machine.
 
 ```
 You: "把这个分析做成 artifact 发布"   →   Claude generates a page
@@ -118,6 +120,18 @@ Claude Code ──(MCP stdio)──> server.py ──┬── publish_artifact 
                                                 └── POST /publish   → update content
 Browser ──> http://localhost:7891 ──(EventSource)──> auto-reload on publish
 ```
+
+## Security
+
+Please read before installing:
+
+- **It renders arbitrary HTML/JS.** An artifact is a page built from content your Claude Code session produces, served at `http://localhost:7891`. Opening it **executes that HTML/JavaScript in your browser** — treat it like running untrusted front-end code. Only publish content you trust.
+- **Localhost only.** The server binds to `127.0.0.1`, so it is **not** reachable from your LAN/Wi-Fi. Don't expose the port (e.g. via a tunnel) to untrusted networks.
+- **`file_path` is restricted.** The `publish_artifact` tool only reads document files (`.html/.htm/.md/.markdown/.txt`); it refuses other paths to avoid leaking files like `~/.ssh/id_rsa` or `.env` if a prompt tries to make it.
+- **Local state is private.** Published content is cached under `~/.claude/artifacts/` with `0600` permissions (dir `0700`).
+- **No sandbox.** Unlike the official feature (CSP-isolated), this has no content sandbox. That's the price of running it yourself on a personal account.
+
+Use it for your own work on your own machine. Don't point it at content from untrusted sources.
 
 ## Limitations vs. official
 
