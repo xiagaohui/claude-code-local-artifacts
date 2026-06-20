@@ -1,4 +1,4 @@
-# Claude Code Local Artifacts
+# Local Artifacts for Claude Code
 
 **English** | [简体中文](./README.zh-CN.md)
 
@@ -55,8 +55,8 @@ If you have a Team/Enterprise plan, use the [official feature](https://code.clau
 ## Install
 
 ```bash
-git clone https://github.com/xiagaohui/claude-code-local-artifacts.git
-cd claude-code-local-artifacts
+git clone https://github.com/xiagaohui/local-artifacts-for-claude-code.git
+cd local-artifacts-for-claude-code
 ./install.sh
 ```
 

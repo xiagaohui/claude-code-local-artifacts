@@ -1,4 +1,4 @@
-# Claude Code Local Artifacts
+# Local Artifacts for Claude Code
 
 **简体中文** | [English](./README.md)
 
@@ -55,8 +55,8 @@
 ## 安装
 
 ```bash
-git clone https://github.com/xiagaohui/claude-code-local-artifacts.git
-cd claude-code-local-artifacts
+git clone https://github.com/xiagaohui/local-artifacts-for-claude-code.git
+cd local-artifacts-for-claude-code
 ./install.sh
 ```
 
