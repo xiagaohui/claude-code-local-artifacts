@@ -1,0 +1,16 @@
+claude-code-local-artifacts
+Copyright (c) 2026 xiagaohui
+
+This product bundles the following third-party software:
+
+--------------------------------------------------------------------------------
+marked (marked.min.js)
+https://github.com/markedjs/marked
+Copyright (c) 2011-2023, Christopher Jeffrey
+Licensed under the MIT License.
+--------------------------------------------------------------------------------
+
+This project is an unofficial, independently developed tool. It is NOT
+affiliated with, endorsed by, or sponsored by Anthropic. "Claude", "Claude
+Code", and "Artifacts" are referenced only to describe interoperability and
+inspiration; all trademarks belong to their respective owners.
