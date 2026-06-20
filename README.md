@@ -1,5 +1,7 @@
 # Claude Code Local Artifacts
 
+**English** | [简体中文](./README.zh-CN.md)
+
 > A local, open-source look‑alike of Claude Code's **Artifacts** feature — for personal accounts that can't use the official one.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
@@ -129,39 +131,3 @@ Intentionally omitted (not needed for personal single-machine use): org sharing,
 ## License
 
 [MIT](./LICENSE)
-
----
-
-<details>
-<summary>🇨🇳 中文说明</summary>
-
-## 这是什么
-
-Claude Code 官方 **Artifacts** 功能的**本地高仿版**——给用不了官方功能（需 Team/Enterprise）的个人账号用。
-
-把 Claude Code 一次 session 的工作成果变成一个**本地实时交互网页**，随 session 进展原地刷新。
-
-## ⚠️ 非官方
-
-这**不是** Anthropic 官方功能，与 Anthropic 无关，只**模仿用户体验**。底层架构完全不同：官方是云端无后端静态页，本项目是本地带 Python 后端。有 Team/Enterprise 的请直接用[官方功能](https://code.claude.com/docs/en/artifacts)。
-
-## 安装
-
-```bash
-git clone https://github.com/xiagaohui/claude-code-local-artifacts.git
-cd claude-code-local-artifacts
-./install.sh
-# 然后重启 Claude Code
-```
-
-## 用法
-
-对话里直接说「把这个做成 artifact 发布」，浏览器自动打开 `http://localhost:7891`，说「更新一下 artifact」原地刷新。`/artifact` 随时重开。
-
-## 特点
-
-- marked.js 内联打包，**内网/离线可用**
-- XSS 防护、16MiB 限制、断电持久化、跨平台
-- 单文件 Python，唯一依赖 `mcp`
-
-</details>
