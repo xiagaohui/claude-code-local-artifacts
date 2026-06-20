@@ -381,7 +381,9 @@ def _run_http():
 
 
 def _open_browser(url: str):
-    """跨平台打开浏览器"""
+    """跨平台打开浏览器。对齐官方 CLAUDE_CODE_ARTIFACT_AUTO_OPEN=0 可关闭自动打开。"""
+    if os.environ.get("CLAUDE_CODE_ARTIFACT_AUTO_OPEN", "1") == "0":
+        return
     if sys.platform == "darwin":
         cmd = ["open", url]
     elif sys.platform.startswith("linux"):
@@ -439,6 +441,11 @@ async def _run_mcp():
     async def call_tool(name: str, arguments: dict):
         if name != "publish_artifact":
             return [TextContent(type="text", text=f"Unknown tool: {name}")]
+
+        # 对齐官方 CLAUDE_CODE_DISABLE_ARTIFACT=1 临时禁用开关
+        if os.environ.get("CLAUDE_CODE_DISABLE_ARTIFACT") == "1":
+            return [TextContent(type="text",
+                text="⚠️ Artifact 已被 CLAUDE_CODE_DISABLE_ARTIFACT=1 禁用。")]
 
         title     = arguments.get("title", "Artifact")
         emoji     = arguments.get("emoji", "📄")

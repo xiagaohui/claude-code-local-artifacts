@@ -109,6 +109,8 @@ Reopen the latest artifact anytime:
 | Env var | Default | Meaning |
 |---|---|---|
 | `ARTIFACTS_PORT` | `7891` | HTTP server port |
+| `CLAUDE_CODE_ARTIFACT_AUTO_OPEN` | `1` | Set to `0` to stop auto-opening the browser on publish (matches the official flag) |
+| `CLAUDE_CODE_DISABLE_ARTIFACT` | unset | Set to `1` to disable publishing entirely (matches the official flag) |
 
 ## How it works
 

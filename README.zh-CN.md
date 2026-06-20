@@ -109,6 +109,8 @@ cp skill/SKILL.md ~/.claude/skills/artifact/SKILL.md
 | 环境变量 | 默认值 | 含义 |
 |---|---|---|
 | `ARTIFACTS_PORT` | `7891` | HTTP 服务端口 |
+| `CLAUDE_CODE_ARTIFACT_AUTO_OPEN` | `1` | 设为 `0` 关闭发布时自动打开浏览器（对齐官方同名变量）|
+| `CLAUDE_CODE_DISABLE_ARTIFACT` | 未设置 | 设为 `1` 完全禁用发布（对齐官方同名变量）|
 
 ## 工作原理
 
